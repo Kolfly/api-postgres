@@ -8,15 +8,15 @@ const authorizeRole = require('../middleware/authorizeRole');
 router.get('/', productController.getAllProducts);
 
 // Route pour obtenir un produit par ID
-router.get('/:id', productController.getProductById);
+router.get('/id', productController.getProductById);
 
 // Route pour créer un nouveau produit
 router.post('/',authenticateToken,authorizeRole('manager'), productController.createProduct);
 
 // Route pour mettre à jour un produit existant
-router.put('/:id',authenticateToken,authorizeRole('manager'), productController.updateProduct);
+router.put('/id',authenticateToken,authorizeRole('manager'), productController.updateProduct);
 
 // Route pour supprimer un produit
-router.delete('/:id',authenticateToken,authorizeRole('manager'), productController.deleteProduct);
+router.delete('/id',authenticateToken,authorizeRole('manager'), productController.deleteProduct);
 
 module.exports = router;

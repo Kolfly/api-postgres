@@ -25,7 +25,7 @@ router.get('/:username',authenticateToken,authorizeRole('manager','preparateur',
     console.error('Erreur lors de la récupération de l\'utilisateur :', error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
-});
+}); 
 
 // Route pour la connexion
 router.post('/login', authController.loginUser);  

@@ -3,7 +3,7 @@ const pool = require('../db');
 
 // Récupérer tous les produits
 const getAllProducts = () => {
-  return pool.query('SELECT * FROM products');
+  return pool.query('SELECT * FROM products ORDER BY id ASC');
 };
 
 // Récupérer un produit par ID

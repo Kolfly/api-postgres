@@ -16,7 +16,7 @@ const getAllProducts = async (req, res) => {
 
 // GET un produit par ID
 const getProductById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     const result = await productModel.getProductById(id);
     if (result.rows.length === 0) {
@@ -56,7 +56,7 @@ const createProduct = async (req, res) => {
 
 // PUT mise à jour d’un produit
 const updateProduct = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   const { name, description, price, stock, menus } = req.body;
 
   // Vérifier si l'ID du menu existe dans la base de données si un menu est spécifié
@@ -83,7 +83,7 @@ const updateProduct = async (req, res) => {
 
 // DELETE suppression d’un produit
 const deleteProduct = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     const result = await productModel.deleteProduct(id);
     if (result.rows.length === 0) {
