@@ -6,7 +6,7 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizeRole'); 
 
 // Créer un utilisateur
-router.post('/',authenticateToken, authController.registerUser);
+router.post('/', authController.registerUser);
 
 // Obtenir tous les utilisateurs
 router.get('/', authenticateToken, authorizeRole('manager'), authController.getAllUsers);
