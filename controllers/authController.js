@@ -36,6 +36,28 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// Contrôleur pour mettre à jour le rôle d’un utilisateur
+const updateUserRole = async (req, res) => {
+  const { username, role } = req.body;
+
+  if (!username || !role) {
+    return res.status(400).json({ error: 'Le nom d’utilisateur et le rôle sont requis.' });
+  }
+
+  try {
+    const updatedUser = await userModel.updateRoleUser(username, role);
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: `Utilisateur "${username}" introuvable.` });
+    }
+
+    res.json({ message: `Rôle de ${username} mis à jour en "${role}" avec succès.`, user: updatedUser });
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour du rôle :', error.message);
+    res.status(500).json({ error: 'Erreur serveur lors de la mise à jour du rôle.' });
+  }
+};
+
 // Connexion et génération de token
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
@@ -81,4 +103,5 @@ module.exports = {
   registerUser,
   getAllUsers,
   loginUser,
+  updateUserRole,
 };

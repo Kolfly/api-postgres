@@ -28,8 +28,22 @@ const getAllUsers = async () => {
   return result;
 };
 
+// Modifier le rôle d’un utilisateur
+const updateRoleUser = async (id, role) => {
+  const result = await db.query(
+    `UPDATE users
+     SET role = $2
+     WHERE username = $1
+     RETURNING id, username, role`,
+    [id, role]
+  );
+  return result.rows[0]; // retourne l'utilisateur modifié
+};
+
+
 module.exports = {
   createUser,
   getUserByUsername,
   getAllUsers,
+  updateRoleUser,
 };

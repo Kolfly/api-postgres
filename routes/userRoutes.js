@@ -6,7 +6,7 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizeRole'); 
 
 // Créer un utilisateur
-router.post('/', authController.registerUser);
+router.post('/',authenticateToken, authController.registerUser);
 
 // Obtenir tous les utilisateurs
 router.get('/', authenticateToken, authorizeRole('manager'), authController.getAllUsers);
@@ -26,6 +26,10 @@ router.get('/:username',authenticateToken,authorizeRole('manager','preparateur',
     res.status(500).json({ error: 'Erreur serveur' });
   }
 }); 
+
+//Route pour modifé le role user 
+
+router.put('/updateRole' ,authenticateToken, authorizeRole('manager'),authController.updateUserRole)
 
 // Route pour la connexion
 router.post('/login', authController.loginUser);  
