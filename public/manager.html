@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <title>Espace Manager</title>
   <link rel="stylesheet" href="stylesmanager.css" />
+  <style>
+    /* Cache la table au départ */
+    #usersTable {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -12,8 +18,58 @@
   <main>
     <section>
       <h2>Gestion des utilisateurs</h2>
-      <button>Voir les utilisateurs</button>
+      <button onclick="fetchUsers()">Voir les utilisateurs</button>
       <button>Ajouter un utilisateur</button>
+
+      <table id="usersTable" border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Rôle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Lignes générées dynamiquement -->
+        </tbody>
+      </table>
+
+      <script>
+        async function fetchUsers() {
+          try {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('http://localhost:3000/users', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+
+            if (!response.ok) {
+              throw new Error('Erreur lors de la récupération des utilisateurs');
+            }
+
+            const users = await response.json();
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.role}</td>
+              `;
+              tbody.appendChild(row);
+            });
+
+            // Affiche la table une fois les utilisateurs chargés
+            document.getElementById('usersTable').style.display = 'table';
+          } catch (error) {
+            console.error('Erreur :', error.message);
+          }
+        }
+      </script>
     </section>
   </main>
 </body>
