@@ -5,10 +5,10 @@ const cors = require('cors');
 app.use(cors())
 
 // Importation des routes
-const productRoutes = require('./routes/productRoutes.js');
-const menusRoutes = require('./routes/menusRoutes.js');
-const commandRoutes = require('./routes/commandRoutes.js');
-const userRoutes = require('./routes/userRoutes.js'); 
+const productRoutes = require('../routes/productRoutes.js');
+const menusRoutes = require('../routes/menusRoutes.js');
+const commandRoutes = require('../routes/commandRoutes.js');
+const userRoutes = require('../routes/userRoutes.js'); 
 
 // Middleware pour parser les requêtes JSON
 app.use(express.json());
