@@ -1,29 +1,29 @@
 const db = require('../db');
 
 // Créer un nouvel utilisateur
-const createUser = async (username, password, role) => {
+const createUser = async (name, last_name, mail, password, role) => {
   const result = await db.query(
-    `INSERT INTO users (username, password, role)
-     VALUES ($1, $2, $3)
-     RETURNING id, username, role`,
-    [username, password, role]
+    `INSERT INTO users (name, last_name, mail, password, role)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING name, last_name, mail, role`,
+    [name, last_name, mail, password, role]
   );
   return result;
 };
 
-// Obtenir un utilisateur par son nom d'utilisateur
-const getUserByUsername = async (username) => {
+// Obtenir un utilisateur par son mail
+const getUserByMail = async (mail) => {
   const result = await db.query(
-    `SELECT * FROM users WHERE username = $1`,
-    [username]
+    `SELECT * FROM users WHERE mail = $1`,
+    [mail]
   );
-  return result; // ✅ version que tu veux garder
+  return result; 
 };
 
 // Obtenir tous les utilisateurs
 const getAllUsers = async () => {
   const result = await db.query(
-    `SELECT id, username, role FROM users`
+    `SELECT * FROM users`
   );
   return result;
 };
@@ -33,8 +33,8 @@ const updateRoleUser = async (id, role) => {
   const result = await db.query(
     `UPDATE users
      SET role = $2
-     WHERE username = $1
-     RETURNING id, username, role`,
+     WHERE mail = $1
+     RETURNING id, mail, role`,
     [id, role]
   );
   return result.rows[0]; // retourne l'utilisateur modifié
@@ -43,7 +43,7 @@ const updateRoleUser = async (id, role) => {
 
 module.exports = {
   createUser,
-  getUserByUsername,
+  getUserByMail,
   getAllUsers,
   updateRoleUser,
 };

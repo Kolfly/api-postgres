@@ -1,11 +1,12 @@
 const { Pool } = require('pg');
+const config = require('./config/config');
 
-// Utiliser la variable d'environnement DATABASE_URL
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Utilisation de l'URL de connexion
-  ssl: {
-    rejectUnauthorized: false, // Nécessaire pour la connexion SSL sur Railway
-  },
+  host: config.db.host,
+  user: config.db.user,
+  password: config.db.password,
+  database: config.db.database,
+  port: config.db.port,
 });
 
 module.exports = pool;

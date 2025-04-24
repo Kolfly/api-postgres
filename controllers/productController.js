@@ -1,13 +1,11 @@
-
 const productModel = require('../models/productModel');
-const menuModel = require('../models/menusModel.js');
-const pool = require('../db');  
+const pool = require('../db');
 
 // GET tous les produits
 const getAllProducts = async (req, res) => {
   try {
-    const result = await productModel.getAllProducts();
-    res.json(result.rows);
+    const products = await productModel.getAllProducts();
+    res.json(products);
   } catch (err) {
     console.error('Erreur lors de la récupération des produits:', err);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -16,82 +14,112 @@ const getAllProducts = async (req, res) => {
 
 // GET un produit par ID
 const getProductById = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
-    const result = await productModel.getProductById(id);
-    if (result.rows.length === 0) {
+    const product = await productModel.getProductById(id);
+    if (!product) {
       return res.status(404).json({ error: 'Produit non trouvé' });
     }
-    res.json(result.rows[0]);
+    res.json(product);
   } catch (err) {
     console.error('Erreur lors de la récupération du produit:', err);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
 
-// POST création d’un produit
 const createProduct = async (req, res) => {
-  const { name, description, price, stock, menus } = req.body;
+  const products = req.body; // Supposons que req.body soit un tableau d'objets produits
 
-  // Vérifier que l'ID du menu est fourni
-  if (!menus) {
-    return res.status(400).json({ error: 'L\'ID du menu est requis pour créer un produit' });
-  }
-
-  // Vérifier si l'ID du menu existe dans la table 'menus'
-  const menuCheck = await pool.query('SELECT id FROM menus WHERE id = $1', [menus]);
-  if (menuCheck.rows.length === 0) {
-    return res.status(400).json({ error: 'Menu non trouvé pour cet ID' });
+  if (!Array.isArray(products) || products.length === 0) {
+    return res.status(400).json({ error: "Le tableau de produits est requis et ne peut pas être vide." });
   }
 
   try {
-    // Créer le produit avec l'ID du menu spécifié
-    const result = await productModel.createProduct(name, description, price, stock, menus);
-    res.status(201).json(result.rows[0]);
+    const newProducts = [];
+
+    for (const product of products) {
+      const { name, description, price, dispo, type, image } = product;
+
+      if (!type) {
+        return res.status(400).json({ error: "L'ID du type est requis pour chaque produit." });
+      }
+
+      // Vérifier que le type existe dans products_type
+      const typeCheck = await pool.query("SELECT id FROM type_products WHERE id = $1", [type]);
+      if (typeCheck.rows.length === 0) {
+        return res.status(400).json({ error: `Type de produit non trouvé pour cet ID: ${type}` });
+      }
+
+      // Création du produit
+      const newProduct = await productModel.createProduct({ name, description, price, dispo, type, image });
+      newProducts.push(newProduct);
+    }
+
+    res.status(201).json(newProducts);
   } catch (err) {
-    console.error('Erreur lors de la création du produit:', err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error("Erreur lors de la création des produits:", err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 };
+
 
 // PUT mise à jour d’un produit
 const updateProduct = async (req, res) => {
-  const { id } = req.body;
-  const { name, description, price, stock, menus } = req.body;
+  const { id, name, description, price, dispo, type, image } = req.body;
 
-  // Vérifier si l'ID du menu existe dans la base de données si un menu est spécifié
-  let menuId = menus;
-  if (menuId) {
-    const menuCheck = await pool.query('SELECT id FROM menus WHERE id = $1', [menuId]);
-    if (menuCheck.rows.length === 0) {
-      return res.status(400).json({ error: 'Menu non trouvé pour cet ID' });
+  // Vérifier que le type existe, s’il est fourni
+  if (type) {
+    const typeCheck = await pool.query('SELECT id FROM type_products WHERE id = $1', [type]);
+    if (typeCheck.rows.length === 0) {
+      return res.status(400).json({ error: 'Type de produit non trouvé pour cet ID' });
     }
   }
 
   try {
-    // Mettre à jour le produit avec les nouveaux détails
-    const result = await productModel.updateProduct(id, name, description, price, stock, menuId);
-    if (result.rows.length === 0) {
+    console.log("Mise à jour du produit avec ID:", id);
+
+    const updated = await productModel.updateProduct(id, name, description, price, dispo, type, image);
+
+    console.log("Résultat de la mise à jour :", updated);
+
+    if (!updated || Object.keys(updated).length === 0) {
       return res.status(404).json({ error: 'Produit non trouvé' });
     }
-    res.json(result.rows[0]);
+
+    res.json(updated);
   } catch (err) {
-    console.error('Erreur lors de la mise à jour du produit:', err);
+    console.error('Erreur lors de la mise à jour du produit:' + id );
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
 
+
 // DELETE suppression d’un produit
 const deleteProduct = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
-    const result = await productModel.deleteProduct(id);
-    if (result.rows.length === 0) {
+    const deleted = await productModel.deleteProduct(id);
+    if (!deleted) {
       return res.status(404).json({ error: 'Produit non trouvé' });
     }
     res.json({ message: 'Produit supprimé avec succès' });
   } catch (err) {
     console.error('Erreur lors de la suppression du produit:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+// récupérer un produit par type
+const getProductsByType = async (req, res) => {
+  const { type } = req.params;
+  try {
+    const products = await productModel.getProductsByType(type);
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'Aucun produit trouvé pour ce type' });
+    }
+    res.json(products);
+  } catch (err) {
+    console.error('Erreur lors de la récupération des produits par type:', err);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
@@ -102,4 +130,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByType,
 };

@@ -6,32 +6,19 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizeRole'); 
 
 // Créer un utilisateur
-router.post('/',authenticateToken, authController.registerUser);
+router.post('/', authController.registerUser); //ok
 
 // Obtenir tous les utilisateurs
-router.get('/', authenticateToken, authorizeRole('manager'), authController.getAllUsers);
+router.get('/', authController.getAllUsers);//ok
 
 // Obtenir un utilisateur par son nom d'utilisateur
-router.get('/:username',authenticateToken,authorizeRole('manager','preparateur','accueil'), async (req, res) => {
-  const { username } = req.params;
-
-  try {
-    const result = await userModel.getUserByUsername(username);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Utilisateur non trouvé' });
-    }
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'utilisateur :', error);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-}); 
+router.get('/mail',authController.getUserByMail); //ok
 
 //Route pour modifé le role user 
 
-router.put('/updateRole' ,authenticateToken, authorizeRole('manager'),authController.updateUserRole)
+router.put('/updateRole' ,authController.updateUserRole)//ok
 
 // Route pour la connexion
-router.post('/login', authController.loginUser);  
+router.post('/login', authController.loginUser); //ok
 
 module.exports = router;

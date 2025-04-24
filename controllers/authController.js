@@ -1,23 +1,28 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');  
+const { get } = require('mongoose');
 
 // Enregistrement d’un nouvel utilisateur
 const registerUser = async (req, res) => {
-  const { username, password, role } = req.body;
+  const { name, last_name, mail, password, role } = req.body;
 
-  if (!username || !password || !role) {
-    return res.status(400).json({ error: 'Tous les champs sont requis (username, password, role)' });
+  // Vérifier que tous les champs requis sont présents
+  if (!name || !last_name || !mail || !password || !role) {
+    return res.status(400).json({ error: 'Tous les champs sont requis (name, last_name, mail, password, role)' });
   }
 
   try {
-    const existingUser = await userModel.getUserByUsername(username);
+    // Vérifier si l'utilisateur existe déjà (par exemple, par l'email)
+    const existingUser = await userModel.getUserByMail(mail);
     if (existingUser.rows.length > 0) {
-      return res.status(409).json({ error: 'Nom d\'utilisateur déjà utilisé' });
+      return res.status(409).json({ error: 'Adresse mail déjà utilisée' });
     }
 
+    // Hacher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await userModel.createUser(username, hashedPassword, role);
+    // Créer l'utilisateur
+    const newUser = await userModel.createUser(name, last_name, mail, hashedPassword, role);
     res.status(201).json({ message: 'Utilisateur créé avec succès', user: newUser.rows[0] });
   } catch (error) {
     console.error('Erreur lors de l’enregistrement :', error);
@@ -38,20 +43,21 @@ const getAllUsers = async (req, res) => {
 
 // Contrôleur pour mettre à jour le rôle d’un utilisateur
 const updateUserRole = async (req, res) => {
-  const { username, role } = req.body;
+  
+  const { mail, role } = req.body;
 
-  if (!username || !role) {
-    return res.status(400).json({ error: 'Le nom d’utilisateur et le rôle sont requis.' });
+  if (!mail || !role) {
+    return res.status(400).json({ error: 'L\'adresse mail et le rôle sont requis.' });
   }
 
   try {
-    const updatedUser = await userModel.updateRoleUser(username, role);
+    const updatedUser = await userModel.updateRoleUser(mail, role);
 
     if (!updatedUser) {
-      return res.status(404).json({ error: `Utilisateur "${username}" introuvable.` });
+      return res.status(404).json({ error: `Utilisateur avec l'adresse mail "${mail}" introuvable.` });
     }
 
-    res.json({ message: `Rôle de ${username} mis à jour en "${role}" avec succès.`, user: updatedUser });
+    res.json({ message: `Rôle de l'utilisateur avec l'adresse mail ${mail} mis à jour en "${role}" avec succès.`, user: updatedUser });
   } catch (error) {
     console.error('Erreur lors de la mise à jour du rôle :', error.message);
     res.status(500).json({ error: 'Erreur serveur lors de la mise à jour du rôle.' });
@@ -60,10 +66,12 @@ const updateUserRole = async (req, res) => {
 
 // Connexion et génération de token
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
+  // Remplacer "username" par "mail"
+  const { mail, password } = req.body;
 
   try {
-    const result = await userModel.getUserByUsername(username);
+    // Utiliser getUserByMail au lieu de getUserByUsername
+    const result = await userModel.getUserByMail(mail);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
@@ -98,10 +106,26 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
+// Récupérer un utilisateur par son adresse mail 
+
+const getUserByMail = async (req, res) => {
+  const { mail } = req.body;
+  try {
+    const result = await userModel.getUserByMail(mail);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'utilisateur par mail:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
 
 module.exports = {
   registerUser,
   getAllUsers,
   loginUser,
   updateUserRole,
+  getUserByMail,
 };
