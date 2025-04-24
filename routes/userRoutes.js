@@ -6,19 +6,19 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizeRole'); 
 
 // Créer un utilisateur
-router.post('/', authController.registerUser); //ok
+router.post('/', authController.registerUser); //ok swagger
 
 // Obtenir tous les utilisateurs
-router.get('/', authController.getAllUsers);//ok
+router.get('/', authController.getAllUsers);//ok swagger
 
-// Obtenir un utilisateur par son nom d'utilisateur
-router.get('/mail',authController.getUserByMail); //ok
+// Obtenir un utilisateur par son mail
+router.get('/mail',authController.getUserByMail); //ok swagger
 
 //Route pour modifé le role user 
 
-router.put('/updateRole' ,authController.updateUserRole)//ok
+router.put('/updateRole' ,authController.updateUserRole)//ok swagger
 
 // Route pour la connexion
-router.post('/login', authController.loginUser); //ok
+router.post('/login', authController.loginUser); //ok swagger
 
 module.exports = router;
