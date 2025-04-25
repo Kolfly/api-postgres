@@ -1,0 +1,486 @@
+openapi: 3.1.0
+info:
+  title: Wacdo API
+  description: API pour la prise de commande pour Wacdo
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000
+    description: Serveur de développement
+tags:
+  - name: types
+    description: Gestion des types de produit
+  - name: users
+    description: Gestion des utilisateurs
+  - name: products
+    description: Gestion des produits
+  - name: commands
+    description: Gestion des commandes
+paths:
+  /types:
+    get:
+      tags: [types]
+      summary: Récupérer tous les types de produit
+      responses:
+        "200":
+          description: Liste des types de produit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Type"
+    post:
+      tags: [types]
+      summary: Créer un nouveau type de produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Type"
+      responses:
+        "201":
+          description: Type de produit créé
+          content:
+            application/json:
+              $ref: "#/components/schemas/Type"
+  /types/{id}:
+    get:
+      tags: [types]
+      summary: Récupérer un Type par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/type"
+        "404":
+          $ref: "#/components/responses/typerNotFound"
+  /type/{id}:
+    delete:
+      tags: [types]
+      summary: Supprimé un utilisateur par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/type"
+        "404":
+          $ref: "#/components/responses/typeNotFound"
+  /users:
+    get:
+      tags: [users]
+      summary: Récupérer tous les utilisateurs
+      responses:
+        "200":
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              $ref: "#/components/schemas/User"
+    post:
+      tags: [users]
+      summary: Créer un nouvel utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          $ref: "#/components/responses/userCreated"
+  /users/mail:
+    get:
+      tags: [users]
+      summary: Récupérer un utilisateur par son mail
+      parameters:
+        - $ref: "#/components/parameters/mail"
+      responses:
+        "200":
+          $ref: "#/components/responses/mail"
+        "404":
+          $ref: "#/components/responses/userNotFound"
+  /users/updateRole:
+    put:
+      tags: [users]
+      summary: Mettre à jour le rôle d'un utilisateur
+      parameters:
+        - $ref: "#/components/parameters/id"
+        - $ref: "#/components/parameters/role"
+      responses:
+        "200":
+          $ref: "#/components/responses/userUpdated"
+        "404":
+          $ref: "#/components/responses/userNotFound"
+  /users/login:
+    post:
+      tags: [users]
+      summary: Connexion d'un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            $ref: "#/components/schemas/Login"
+      responses:
+        "200":
+          $ref: "#/components/responses/userLogin"
+        "404":
+          $ref: "#/components/responses/userNotFound"
+  /products:
+    get:
+      tags: [products]
+      summary: Récupérer tous les produits
+      responses:
+        "200":
+          description: Liste des produits
+          content:
+            application/json:
+              $ref: "#/components/schemas/Product"
+    post:
+      tags: [products]
+      summary: Créer un nouveau produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          $ref: "#/components/responses/productCreated"
+    put:
+      tags: [products]
+      summary: Mettre à jour un produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          $ref: "#/components/responses/productCreated"
+  /products/{id}:
+    get:
+      tags: [products]
+      summary: Récupérer un produit par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/product"
+        "404":
+          $ref: "#/components/responses/productNotFound"
+    delete:
+      tags: [products]
+      summary: Supprimer un produit par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/productDeleted"
+        "404":
+          $ref: "#/components/responses/productNotFound"
+  /products/type/{id}:
+    get:
+      tags: [products]
+      summary: Récupérer tous les produits d'un type
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/productsByType"
+        "404":
+          $ref: "#/components/responses/typeNotFound"
+  /commands:
+    get:
+      tags: [commands]
+      summary: Récupérer toutes les commandes
+      responses:
+        "200":
+          description: Liste des commandes
+          content:
+            application/json:
+              $ref: "#/components/schemas/Command"
+    post:
+      tags: [commands]
+      summary: Créer une nouvelle commande
+      requestBody:
+        required: true
+        content:
+          application/json:
+            $ref: "#/components/schemas/Command"
+      responses:
+        "201":
+          $ref: "#/components/responses/commandCreated"
+  /commands/{id}:
+    get:
+      tags: [commands]
+      summary: Récupérer une commande par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/command"
+        "404":
+          $ref: "#/components/responses/commandNotFound"
+    delete:
+      tags: [commands]
+      summary: Supprimer une commande par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          $ref: "#/components/responses/commandDeleted"
+        "404":
+          $ref: "#/components/responses/commandNotFound"
+
+          components:
+  schemas:
+    Type:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - name
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+      required:
+        - name
+        - email
+        - role
+
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        typeId:
+          type: integer
+      required:
+        - name
+        - price
+        - typeId
+
+    Command:
+      type: object
+      properties:
+        id_command:
+          type: integer
+        nom_client:
+          type: string
+        price:
+          type: number
+          format: float
+        statut:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: integer
+              quantity:
+                type: integer
+              price_unit:
+                type: number
+                format: float
+              subtotal:
+                type: number
+                format: float
+      required:
+        - nom_client
+        - products
+
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    mail:
+      name: email
+      in: query
+      required: true
+      schema:
+        type: string
+        format: email
+    role:
+      name: role
+      in: query
+      required: true
+      schema:
+        type: string
+
+  responses:
+    type:
+      description: Type de produit trouvé
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Type"
+
+    typerNotFound:
+      description: Type de produit non trouvé
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Type non trouvé"
+
+    typeNotFound:
+      description: Type de produit non trouvé
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Type non trouvé"
+
+    userCreated:
+      description: Utilisateur créé avec succès
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"
+
+    mail:
+      description: Utilisateur trouvé par mail
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"
+
+    userNotFound:
+      description: Utilisateur non trouvé
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Utilisateur non trouvé"
+
+    userUpdated:
+      description: Utilisateur mis à jour
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"
+
+    userLogin:
+      description: Connexion réussie
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+              user:
+                $ref: "#/components/schemas/User"
+
+    product:
+      description: Produit trouvé
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+
+    productNotFound:
+      description: Produit non trouvé
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Produit non trouvé"
+
+    productCreated:
+      description: Produit créé ou mis à jour avec succès
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+
+    productDeleted:
+      description: Produit supprimé avec succès
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Produit supprimé"
+
+    productsByType:
+      description: Liste des produits par type
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Product"
+
+    command:
+      description: Commande récupérée
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Command"
+
+    commandNotFound:
+      description: Commande non trouvée
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Commande non trouvée"
+
+    commandCreated:
+      description: Commande créée avec succès
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Command"
