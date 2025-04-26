@@ -5,7 +5,7 @@ const pool = require('../db');
 const getAllProducts = async (req, res) => {
   try {
     const products = await productModel.getAllProducts();
-    res.json(products);
+    res.status(200).json(products);
   } catch (err) {
     console.error('Erreur lors de la récupération des produits:', err);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -109,15 +109,19 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-// récupérer un produit par type
 const getProductsByType = async (req, res) => {
   const { type } = req.params;
   try {
-    const products = await productModel.getProductsByType(type);
-    if (products.length === 0) {
+    // Assure-toi que la fonction model renvoie les produits filtrés par type
+    const result = await productModel.getProductsByType(type);
+
+    // Vérifie si des produits ont été trouvés
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Aucun produit trouvé pour ce type' });
     }
-    res.json(products);
+
+    // Si des produits sont trouvés, renvoie-les
+    res.status(200).json(result.rows);
   } catch (err) {
     console.error('Erreur lors de la récupération des produits par type:', err);
     res.status(500).json({ error: 'Erreur serveur' });

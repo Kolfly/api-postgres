@@ -37,3 +37,4 @@ app.listen(PORT, () => {
   console.log(` Serveur démarré sur http://localhost:${PORT}`);
   console.log(' Documentation Swagger disponible sur http://localhost:3000/api-docs');
 });
+module.exports = app; // Exporter l'application pour les tests
