@@ -99,10 +99,12 @@ const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const deleted = await productModel.deleteProduct(id);
-    if (!deleted) {
+
+    if (deleted.rows.length === 0) {
       return res.status(404).json({ error: 'Produit non trouvé' });
     }
-    res.json({ message: 'Produit supprimé avec succès' });
+
+    res.status(200).json({ message: 'Produit supprimé avec succès' });
   } catch (err) {
     console.error('Erreur lors de la suppression du produit:', err);
     res.status(500).json({ error: 'Erreur serveur' });
