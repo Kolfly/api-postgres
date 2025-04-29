@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1745918531324" clover="3.2.0">
-  <project timestamp="1745918531325" name="All files">
-    <metrics statements="433" coveredstatements="257" conditionals="89" coveredconditionals="32" methods="47" coveredmethods="26" elements="569" coveredelements="315" complexity="0" loc="433" ncloc="433" packages="6" files="18" classes="18"/>
+<coverage generated="1745919314757" clover="3.2.0">
+  <project timestamp="1745919314757" name="All files">
+    <metrics statements="412" coveredstatements="255" conditionals="87" coveredconditionals="32" methods="45" coveredmethods="26" elements="544" coveredelements="313" complexity="0" loc="412" ncloc="412" packages="6" files="18" classes="18"/>
     <package name="api-postgres">
       <metrics statements="25" coveredstatements="25" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
       <file name="db.js" path="C:\Users\adminpe\Desktop\Nouveau dossier\nodeJS\api\api-postgres\db.js">
@@ -361,9 +361,9 @@
       </file>
     </package>
     <package name="api-postgres.models">
-      <metrics statements="70" coveredstatements="41" conditionals="2" coveredconditionals="0" methods="18" coveredmethods="10"/>
+      <metrics statements="49" coveredstatements="39" conditionals="0" coveredconditionals="0" methods="16" coveredmethods="10"/>
       <file name="commandModel.js" path="C:\Users\adminpe\Desktop\Nouveau dossier\nodeJS\api\api-postgres\models\commandModel.js">
-        <metrics statements="31" coveredstatements="12" conditionals="2" coveredconditionals="0" methods="4" coveredmethods="2"/>
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
@@ -373,27 +373,6 @@
         <line num="17" count="1" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
-        <line num="29" count="3" type="stmt"/>
-        <line num="31" count="0" type="stmt"/>
-        <line num="35" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="38" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
-        <line num="44" count="0" type="stmt"/>
-        <line num="45" count="0" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="50" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="51" count="0" type="stmt"/>
-        <line num="54" count="0" type="stmt"/>
-        <line num="55" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="65" count="0" type="stmt"/>
-        <line num="69" count="0" type="stmt"/>
-        <line num="74" count="0" type="stmt"/>
-        <line num="78" count="3" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
         <line num="89" count="3" type="stmt"/>
       </file>
       <file name="productModel.js" path="C:\Users\adminpe\Desktop\Nouveau dossier\nodeJS\api\api-postgres\models\productModel.js">

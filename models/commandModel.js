@@ -24,7 +24,7 @@ const getCommandById = async (id) => {
   const result = await pool.query(query, [id]);
   return result.rows;
 };
-
+/*
 // Ajouter une nouvelle commande et ses détails (avec prix récupéré depuis "products")
 const addCommand = async (nom_client, statut, details) => {
   // Insérer la commande principale
@@ -84,11 +84,11 @@ const updateCommandStatus = async (id_command, newStatus) => {
   `;
   const result = await pool.query(query, [newStatus, id_command]);
   return result.rows[0];
-};
+};*/
 
 module.exports = {
   getAllCommands,
   getCommandById,
-  addCommand,
-  updateCommandStatus,
+ // addCommand,
+ // updateCommandStatus,
 };
