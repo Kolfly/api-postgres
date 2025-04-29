@@ -1,5 +1,15 @@
 const commandModel = require('../models/commandModel');
-const db = require('../db');
+const pool = require('../db');
+
+// Fonction pour éviter les erreurs de sérialisation JSON (objets circulaires)
+const safeLog = (obj) => {
+  try {
+    console.log(JSON.stringify(obj, (key, value) =>
+      key === 'socket' ? undefined : value)); // Ignore le 'socket' ou autres propriétés circulaires
+  } catch (e) {
+    console.error("Erreur de sérialisation JSON dans safeLog", e);
+  }
+};
 
 // Récupérer toutes les commandes avec leurs détails
 const getAllCommands = async (req, res) => {
@@ -22,6 +32,8 @@ const getCommandById = async (req, res) => {
     const command = await commandModel.getCommandById(id);
     console.log("Commande récupérée:", command);
     if (command.length > 0) {
+      // Utiliser safeLog si vous avez besoin de sérialiser des objets complexes
+      safeLog(command);
       res.json(command);
     } else {
       console.warn(`Commande avec id=${id} non trouvée`);
@@ -34,84 +46,74 @@ const getCommandById = async (req, res) => {
 };
 
 // Ajouter une nouvelle commande et ses détails
-const addCommand = async (req, res) => {
-  console.log("addCommand appelée avec:", req.body);
-  const { nom_client, statut, details } = req.body;
+const addCommand = async (nom_client, statut, details) => {
+  console.log("Début de l'ajout de la commande");
 
   try {
-    // Log : détails reçus
-    console.log("Détails de la commande reçus:", details);
+    // 1. Insertion dans Command_tete
+    const insertTeteQuery = `
+      INSERT INTO Command_tete (nom_client, price, statut)
+      VALUES ($1, 0, $2) RETURNING id_command;
+    `;
+    const teteResult = await pool.query(insertTeteQuery, [nom_client, statut]);
+    const id_command = teteResult.rows[0].id_command;
+    console.log(`Commande insérée avec id_command: ${id_command}`);
 
-    // Récupérer les identifiants de produits
-    const productIds = details.map(d => d.code_produit);
-    console.log("Product IDs:", productIds);
+    let totalPrice = 0;
+    const insertDetailQuery = `
+      INSERT INTO Command_detail (id_command, code_produit, quantite, prix_unitaire, sous_total)
+      VALUES ($1, $2, $3, $4, $5);
+    `;
 
-    // Récupérer les prix des produits dans la base
-    const { rows: products } = await db.query(
-      `SELECT id, price FROM products WHERE id = ANY($1::int[])`,
-      [productIds]
-    );
-    console.log("Produits récupérés de la base de données:", products);
-
-    // Construire une map { id: price }
-    const productMap = {};
-    products.forEach(p => {
-      productMap[p.id] = p.price;
-      console.log(`Produit ID ${p.id} avec prix: ${p.price}`);
-    });
-
-    // Vérifier que chaque produit dans details existe dans productMap
+    // 2. Boucle sur les détails
     for (const detail of details) {
-      if (productMap[detail.code_produit] === undefined) {
-        console.error(`Produit avec ID ${detail.code_produit} introuvable.`);
-        return res.status(400).json({ error: `Produit avec ID ${detail.code_produit} introuvable.` });
+      const { code_produit, quantite } = detail;
+
+      const productRes = await pool.query(
+        `SELECT price FROM products WHERE id = $1`,
+        [code_produit]
+      );
+
+      if (productRes.rowCount === 0) {
+        throw new Error(`Produit avec l'ID ${code_produit} introuvable`);
       }
+
+      const prix_unitaire = productRes.rows[0].price;
+      const sous_total = quantite * prix_unitaire;
+
+      await pool.query(insertDetailQuery, [
+        id_command,
+        code_produit,
+        quantite,
+        prix_unitaire,
+        sous_total
+      ]);
+
+      totalPrice += sous_total;
     }
 
-    // Calculer les sous-totaux et préparer les détails de commande
-    const commandDetails = details.map(d => {
-      return {
-        code_produit: d.code_produit,
-        quantite: d.quantite,
-        prix_unitaire: productMap[d.code_produit],
-        sous_total: d.quantite * productMap[d.code_produit]
-      };
-    });
-    console.log("Détails de la commande calculés:", commandDetails);
-
-    // Calculer le prix total de la commande
-    const totalPrice = commandDetails.reduce((sum, d) => sum + d.sous_total, 0);
-    console.log("Prix total calculé:", totalPrice);
-
-    // Insérer la commande principale et récupérer son ID
-    console.log(`Insertion de la commande principale avec nom_client="${nom_client}", prix=${totalPrice}, statut="${statut}"`);
-    const { rows } = await db.query(
-      `INSERT INTO Command_tete (nom_client, price, statut)
-       VALUES ($1, $2, $3) RETURNING id_command`,
-      [nom_client, totalPrice, statut]
+    // 3. Mise à jour du total
+    await pool.query(
+      `UPDATE Command_tete SET price = $1 WHERE id_command = $2`,
+      [totalPrice, id_command]
     );
-    const id_command = rows[0].id_command;
-    console.log("Commande créée avec ID:", id_command);
 
-    // Insérer les détails de la commande
-    console.log("Insertion des détails de commande dans Command_detail");
-    const insertPromises = commandDetails.map(d => {
-      console.log(`Insertion du détail - code_produit: ${d.code_produit}, quantite: ${d.quantite}, prix_unitaire: ${d.prix_unitaire}, sous_total: ${d.sous_total}`);
-      return db.query(
-        `INSERT INTO Command_detail (id_command, code_produit, quantite, prix_unitaire)
-         VALUES ($1, $2, $3, $4)`,
-        [id_command, d.code_produit, d.quantite, d.prix_unitaire]
-      );
-    });
-    await Promise.all(insertPromises);
-    console.log("Tous les détails ont été insérés avec succès");
+    console.log(`Commande finalisée. Total: ${totalPrice} €`);
 
-    res.status(201).json({ message: 'Commande créée avec succès', id_command });
+    // ✅ Retour propre (évite les objets circulaires)
+    return {
+      id_command,
+      nom_client,
+      statut,
+      total_price: totalPrice
+    };
+
   } catch (error) {
-    console.error("Erreur dans l'ajout de la commande:", error.stack);
-    res.status(500).send("Erreur lors de la création de la commande");
+    console.error("Erreur lors de l'ajout de la commande:", error.message);
+    throw error; // Ne pas renvoyer un objet brut de la BDD
   }
 };
+
 
 // Modifier le statut d'une commande avec logs détaillés
 const updateCommandStatus = async (req, res) => {
@@ -128,7 +130,7 @@ const updateCommandStatus = async (req, res) => {
     console.log("Exécution de la requête SQL :", queryText);
     console.log("Valeurs utilisées :", [statut, id]);
 
-    const result = await db.query(queryText, [statut, id]);
+    const result = await pool.query(queryText, [statut, id]);
     console.log("Résultat de la requête :", result);
 
     if (result.rowCount === 0) {

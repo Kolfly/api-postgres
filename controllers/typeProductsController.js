@@ -43,20 +43,24 @@ const createTypeProducts = async (req, res) => {
   }
 };
 
-// DELETE suppression d’un type
+// Contrôleur DELETE suppression d’un type
 const deleteTypeProducts = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await typeProductsModel.deleteTypeProducts(id);
-    if (result.rows.length === 0) {
+
+    if (result.rowCount === 0) {  // Vérifie si aucune ligne n'a été supprimée
       return res.status(404).json({ error: 'type non trouvé' });
     }
-    res.json({ message: 'type supprimé avec succès' });
+
+    // Si la suppression a réussi, renvoie un message de succès
+    res.status(200).json({ message: 'type supprimé avec succès' });
   } catch (err) {
     console.error('Erreur lors de la suppression du type:', err);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
+
 
 module.exports = {
   getAllTypeProducts,

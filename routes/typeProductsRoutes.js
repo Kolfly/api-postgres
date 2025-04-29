@@ -14,6 +14,6 @@ router.get('/test', (req, res) => {
 router.get('/', typeProductsController.getAllTypeProducts); //ok
 router.get('/:id', typeProductsController.getTypeProductsById); //ok
 router.post('/', typeProductsController.createTypeProducts); //ok
-router.delete('/del/:id', typeProductsController.deleteTypeProducts); //ok
+router.delete('/:id', typeProductsController.deleteTypeProducts); //ok
 
 module.exports = router;
