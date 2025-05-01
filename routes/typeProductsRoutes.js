@@ -11,9 +11,9 @@ router.get('/test', (req, res) => {
   res.send('TypeProducts route fonctionne ✅');
 });
 
-router.get('/', typeProductsController.getAllTypeProducts); //ok
-router.get('/:id', typeProductsController.getTypeProductsById); //ok
-router.post('/', typeProductsController.createTypeProducts); //ok
-router.delete('/:id', typeProductsController.deleteTypeProducts); //ok
+router.get('/',authenticateToken,authorizeRole(1,2), typeProductsController.getAllTypeProducts); //ok
+router.get('/:id',authenticateToken, typeProductsController.getTypeProductsById); //ok
+router.post('/',authenticateToken,authorizeRole(1), typeProductsController.createTypeProducts); //ok
+router.delete('/:id',authenticateToken,authorizeRole(1), typeProductsController.deleteTypeProducts); //ok
 
 module.exports = router;
