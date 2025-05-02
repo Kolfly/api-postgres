@@ -1,4 +1,4 @@
-// controllers/typeProductsController.js
+
 const typeProductsModel = require('../models/typeProductsModele');
 
 // GET tous les types de produits
@@ -43,17 +43,17 @@ const createTypeProducts = async (req, res) => {
   }
 };
 
-// Contrôleur DELETE suppression d’un type
+//  suppression d’un type
 const deleteTypeProducts = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await typeProductsModel.deleteTypeProducts(id);
 
-    if (result.rowCount === 0) {  // Vérifie si aucune ligne n'a été supprimée
+    if (result.rowCount === 0) {  // Vérif aucune ligne n'a été supprimée
       return res.status(404).json({ error: 'type non trouvé' });
     }
 
-    // Si la suppression a réussi, renvoie un message de succès
+    // Si la suppression a réussi
     res.status(200).json({ message: 'type supprimé avec succès' });
   } catch (err) {
     console.error('Erreur lors de la suppression du type:', err);

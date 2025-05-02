@@ -32,6 +32,8 @@ describe('Tests sur les routes /products', () => {
     }
   });
 
+  
+
 
   it('doit supprimer un type', async () => {
     const response = await request(app).delete('/types/11');

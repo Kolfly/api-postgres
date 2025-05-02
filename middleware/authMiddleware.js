@@ -1,9 +1,9 @@
 // authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-// Middleware pour vérifier l'authentification (le token)
+// Middleware pour vérifier l'authentification 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Récupérer le token (en supposant qu'il est dans le format "Bearer token")
+  const token = req.headers['authorization']?.split(' ')[1]; // Récupérer le token 
 
   if (!token) {
     return res.status(401).json({ error: 'Token manquant ou invalide' });
@@ -17,7 +17,7 @@ const authenticateToken = (req, res, next) => {
 
     // Ajouter les informations de l'utilisateur à la requête
     req.user = user;
-    next(); // Passe à la suite (le rôle pourra être vérifié dans le middleware suivant)
+    next(); 
   });
 };
 

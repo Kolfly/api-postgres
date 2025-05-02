@@ -34,7 +34,7 @@ describe('Tests sur les routes /products', () => {
 
 
   it('doit récupérer les produits par ID', async () => {
-    const response = await request(app).get('/products//20');
+    const response = await request(app).get('/products/20');
     expect([200, 404]).toContain(response.statusCode);
     if (response.statusCode === 200) {
       expect(response.body).toBeInstanceOf(Array);

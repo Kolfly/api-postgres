@@ -94,7 +94,7 @@ const updateProduct = async (req, res) => {
 };
 
 
-// DELETE suppression d’un produit
+//  suppression d’un produit
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
@@ -114,15 +114,14 @@ const deleteProduct = async (req, res) => {
 const getProductsByType = async (req, res) => {
   const { type } = req.params;
   try {
-    // Assure-toi que la fonction model renvoie les produits filtrés par type
     const result = await productModel.getProductsByType(type);
 
-    // Vérifie si des produits ont été trouvés
+    // Vérif des produits ont été trouvés
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Aucun produit trouvé pour ce type' });
     }
 
-    // Si des produits sont trouvés, renvoie-les
+    // Si des produits sont trouvés
     res.status(200).json(result.rows);
   } catch (err) {
     console.error('Erreur lors de la récupération des produits par type:', err);

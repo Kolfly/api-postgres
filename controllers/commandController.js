@@ -1,7 +1,7 @@
 const commandModel = require('../models/commandModel');
 const pool = require('../db');
 
-// Fonction pour éviter les erreurs de sérialisation JSON (objets circulaires)
+// Fonction pour éviter les erreurs de sérialisation JSON 
 const safeLog = (obj) => {
   try {
     console.log(JSON.stringify(obj, (key, value) =>
@@ -87,7 +87,7 @@ const addCommand = async (req, res) => {
 
         const prix_unitaire = productRes.rows[0].price;
         console.log(`Prix unitaire récupéré: ${prix_unitaire}`);
-        const sous_total = quantite && prix_unitaire ? parseFloat((quantite * prix_unitaire).toFixed(2)) : 0; // Ensure sous_total is a valid number
+        const sous_total = quantite && prix_unitaire ? parseFloat((quantite * prix_unitaire).toFixed(2)) : 0; 
         console.log(`Sous-total calculé: ${sous_total}`);
         if (isNaN(sous_total)) {
           console.error(`Erreur: sous_total est NaN pour code_produit=${code_produit}`);
@@ -161,7 +161,6 @@ const updateCommandStatus = async (req, res) => {
   console.log(`Tentative de mise à jour pour id_command = ${id} avec nouveau statut = "${statut}"`);
 
   try {
-    // Préparer la requête SQL et les valeurs
     const queryText = `UPDATE command_tete SET statut = $1 WHERE id_command = $2 RETURNING *`;
     console.log("Exécution de la requête SQL :", queryText);
     console.log("Valeurs utilisées :", [statut, id]);

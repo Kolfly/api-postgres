@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>8/15</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>8/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -111,13 +111,11 @@
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,30 +125,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -161,12 +159,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// models/productModel.js
-const pool = require('../db');
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const pool = require('../db');
 &nbsp;
 // Récupérer tous les produits
-const getAllProducts = () =&gt; {
-  return pool.query('SELECT * FROM products ORDER BY id ASC');
+const getAllProducts = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >  return pool.query('SELECT * FROM products ORDER BY id ASC');</span>
 };
 &nbsp;
 // Récupérer un produit par ID
@@ -175,31 +172,31 @@ const getProductById = <span class="fstat-no" title="function not covered" >(i</
 };
 &nbsp;
 // Créer un nouveau produit (sans insérer manuellement l'id)
-const createProduct = async ({ name, description, price, dispo, type, image }) =&gt; {
-  const result = await pool.query(
+const createProduct = <span class="fstat-no" title="function not covered" >as</span>ync ({ name, description, price, dispo, type, image }) =&gt; {
+  const result = <span class="cstat-no" title="statement not covered" >await pool.query(</span>
     `INSERT INTO products (name, description, price, dispo, type, image)
      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
     [name, description, price, dispo, type, image]
   );
-  return result.rows[0];
+<span class="cstat-no" title="statement not covered" >  return result.rows[0];</span>
 };
 &nbsp;
 // Mettre à jour un produit
-const updateProduct = (id, name, description, price, dispo, type) =&gt; {
-  return pool.query(
+const updateProduct = <span class="fstat-no" title="function not covered" >(i</span>d, name, description, price, dispo, type) =&gt; {
+<span class="cstat-no" title="statement not covered" >  return pool.query(</span>
     'UPDATE products SET name = $1, description = $2, price = $3, dispo = $4, type = $5 WHERE id = $6 RETURNING *',
     [name, description, price, dispo, type, id]
   );
 };
 &nbsp;
 // Supprimer un produit
-const deleteProduct = (id) =&gt; {
-  return pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+const deleteProduct = <span class="fstat-no" title="function not covered" >(i</span>d) =&gt; {
+<span class="cstat-no" title="statement not covered" >  return pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);</span>
 };
 &nbsp;
 //récupérer les produits par type
-const getProductsByType = (type) =&gt; {
-  return pool.query('SELECT * FROM products WHERE type = $1', [type]);
+const getProductsByType = <span class="fstat-no" title="function not covered" >(t</span>ype) =&gt; {
+<span class="cstat-no" title="statement not covered" >  return pool.query('SELECT * FROM products WHERE type = $1', [type]);</span>
 };
 &nbsp;
 module.exports = {
@@ -217,7 +214,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-29T11:43:01.167Z
+                at 2025-05-02T17:00:14.216Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -66,11 +66,9 @@ const updateUserRole = async (req, res) => {
 
 // Connexion et génération de token
 const loginUser = async (req, res) => {
-  // Remplacer "username" par "mail"
   const { mail, password } = req.body;
 
   try {
-    // Utiliser getUserByMail au lieu de getUserByUsername
     const result = await userModel.getUserByMail(mail);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Utilisateur non trouvé' });
@@ -88,7 +86,7 @@ const loginUser = async (req, res) => {
       role: user.role,
     };
 
-    // S'assurer que le secret est bien défini
+    //  le secret est bien défini
     if (!process.env.JWT_SECRET) {
       console.error('JWT_SECRET non défini dans .env');
       return res.status(500).json({ error: 'Erreur de configuration du serveur' });

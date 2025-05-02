@@ -1,4 +1,3 @@
-// models/productModel.js
 const pool = require('../db');
 
 // Récupérer tous les produits

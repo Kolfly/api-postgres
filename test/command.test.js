@@ -40,7 +40,8 @@ it('doit créer une nouvelle commande', async () => {
     const response = await request(app)
         .post('/commands')
         .set('Content-Type', 'application/json')
-        .send(newCommand);
+        .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`) 
+        send(newCommand);
 
     // Vérifie que la commande a été créée avec succès
     expect(response.statusCode).toBe(201);
