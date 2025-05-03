@@ -10,6 +10,7 @@ const config = {
     database: process.env.DB_NAME,
     port: process.env.DB_PORT || 5432,
   },
+  TEST_TOKEN: process.env.TEST_TOKEN,
 };
 
 module.exports = config;

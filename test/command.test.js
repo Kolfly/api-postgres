@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../index'); // Assure-toi que l'application Express est exportée correctement depuis index.js
 const db = require('../db');  // Assure-toi que ta base de données est correctement configurée pour les tests
-
+require('dotenv').config();
 describe('Tests sur les routes /commands', () => {
 
   it('doit récupérer toutes les commandes', async () => {
