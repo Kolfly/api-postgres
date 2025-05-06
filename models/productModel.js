@@ -37,6 +37,10 @@ const deleteProduct = (id) => {
 const getProductsByType = (type) => {
   return pool.query('SELECT * FROM products WHERE type = $1', [type]);
 };
+const getProductsByIds = async (ids) => {
+  const result = await pool.query('SELECT * FROM products WHERE id = ANY($1)', [ids]);
+  return result.rows;
+};
 
 module.exports = {
   getAllProducts,
@@ -45,4 +49,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByType,
+  getProductsByIds,
 };

@@ -129,6 +129,33 @@ const getProductsByType = async (req, res) => {
   }
 };
 
+const getProductsByIds = async (req, res) => {
+  const idsParam = req.query.ids;
+
+  if (!idsParam) {
+    return res.status(400).json({ error: "Le paramètre 'ids' est requis. Exemple : /products/ids?ids=1,2,3" });
+  }
+
+  const ids = idsParam.split(',').map(Number).filter(id => !isNaN(id));
+
+  if (ids.length === 0) {
+    return res.status(400).json({ error: "Le paramètre 'ids' doit contenir au moins un ID valide." });
+  }
+
+  try {
+    const products = await productModel.getProductsByIds(ids);
+
+    if (products.length === 0) {
+      return res.status(404).json({ error: "Aucun produit trouvé pour les IDs spécifiés." });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error('Erreur lors de la récupération des produits par IDs:', err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -136,4 +163,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByType,
+  getProductsByIds
 };

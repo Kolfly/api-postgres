@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <title>Menu fixe avec flèches</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Bandeau fixe pour le menu -->
+   <div>
+    <div id="menu-wrapper">
+      <button id="left-arrow" class="arrow"><img src="./annexe/images/fleche-slider.png"></button>
+      <!-- Ce conteneur permet le défilement horizontal des boutons -->
+      <div id="menu" class="menu-scroll">
+        <!-- Les boutons de catégorie générés dynamiquement apparaîtront ici -->
+      </div>
+      <button id="right-arrow" class="arrow"><img src="./annexe/images/fleche-slider2.png"></button>
+    </div>
+
+    <!-- Container des produits -->
+    <div id="product-container">
+      <!-- Les produits s'afficheront ici -->
+    </div>
+  </div>
+<!--recapitulatif de commande-->
+  <div id="order-summary">
+    <h2>Votre commande</h2>
+    <p>Commande n°: <span id="order-number"></span></p>
+    <p>Sur place: <span id="order-in-store"></span></p>
+    <ul id="order-items">
+      <!-- Les articles ajoutés seront listés ici -->
+    </ul>
+    <p>Total: <span id="order-total"> €</span></p>
+    <div id="order-actions">
+      <button id="cancel-order">Abandon</button>
+      <button id="pay-order">Payer</button>
+    </div>
+  </div>
+</div>
+<div id="popup" class="hidden"></div>
+  <script src="script.js"></script>
+</body>
+</html>
