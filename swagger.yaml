@@ -186,6 +186,26 @@ paths:
           $ref: "#/components/responses/productsByType"
         "404":
           $ref: "#/components/responses/typeNotFound"
+  /products/multi?ids={ids}:
+    get:
+      tags: [products]
+      summary: Récupérer plusieurs produits par ID
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          description: Liste des IDs de produits séparés par des virgules
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Liste des produits trouvés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
   /commands:
     get:
       tags: [commands]
@@ -226,6 +246,17 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/commandDeleted"
+        "404":
+          $ref: "#/components/responses/commandNotFound"
+  /commands/update/{id}:
+    put:
+      tags: [commands]
+      summary: Mettre à jour une commande par ID
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          
         "404":
           $ref: "#/components/responses/commandNotFound"
 

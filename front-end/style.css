@@ -47,6 +47,7 @@ body {
     width: 100%;
   }
   
+  
   /* Titre */
   .menu-content h2 {
     font-weight: 800;
@@ -70,11 +71,11 @@ body {
     display: flex;
     gap: 1.5rem;
     justify-content: center;
-    width: 100%;
+   
   }
   
   /* Boutons */
-  .menu-button {
+  #menu-button {
     width: 285px;
     height: 202px;
     border-radius: 8px;
@@ -83,14 +84,21 @@ body {
     cursor: pointer;
     transition: transform 0.2s ease;
   }
+  #image-selection {
+    width: 141px;
+    height: 96px;
+    border-radius: 0px;
+    margin-bottom: 1rem;
+    
+  }
   
   /* Effet hover bouton */
-  .menu-button:hover {
+  #menu-button:hover {
     transform: scale(1.05);
   }
   
   /* Texte des boutons */
-  .menu-button span {
+  #menu-button span {
     font-weight: 700;
     color: black;
     font-size: 0.875rem;
@@ -103,7 +111,7 @@ body {
   /* Bandeau fixe pour le menu */
 #menu-wrapper {
   position: fixed;
-  top: 0;
+  top: 16px;
   left: 0;
   width: 81%;
   height: 16%;
@@ -117,7 +125,7 @@ body {
 
 /* Conteneur défilant pour le menu */
 .menu-scroll {
-  overflow-x: auto;
+  overflow-x: hidden;
   white-space: nowrap;
   flex-grow: 1;
   margin: 0 10px;
@@ -258,4 +266,8 @@ body {
   
   width: 165px;
   height: 124px;
+}
+#close-popup{
+  background-color: #ffffff;
+  border: none;
 }

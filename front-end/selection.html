@@ -20,22 +20,25 @@
           Souhaitez-vous consommer votre menu sur place ou préférez-vous l'emporter ?
         </p>
         <div class="button-group">
-          <button type="button" class="menu-button" onclick="choisiroption(2)" >
-            <img src="./annexe/images/logoaemporter.png" 
+          <button type="button" id="menu-button" onclick="choisiroption(2)" >
+            <img src="./annexe/images/logoaemporter.png" id="image-selection"
                  alt="Icône d'une table avec deux chaises jaunes" 
-                 width="141" height="96"/>
+                 />
             <span>Sur Place</span>
           </button>
-          <button type="button" class="menu-button" onclick="choisiroption(1)">
-            <img src="./annexe/images/logosurplace.png" 
+          <button type="button" id="menu-button" onclick="choisiroption(1)">
+            <img src="./annexe/images/logosurplace.png" id="image-selection"
                  alt="Icône d'un sac à emporter McDonald's jaune et marron" 
-                 width="141" height="96"/>
+                 />
             <span>A Emporter</span>
           </button>
         </div>
       </div>
     </div>
   </div>
-
+<script>//Vide le localStorage à chaque refresh
+  window.addEventListener("load", () => {
+    localStorage.clear();
+  });</script>
 </body>
 </html>

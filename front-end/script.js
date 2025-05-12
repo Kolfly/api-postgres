@@ -1,8 +1,20 @@
+// page selection.html ===//
+function choisiroption(selection) {
+  // Enregistre la sélection dans le localStorage
+  localStorage.setItem('selection', selection);
+
+  // Redirige vers la page commande.html
+  window.location.href = 'commande.html';
+}
+
+//=== page commande.hml ===//
+
 document.addEventListener("DOMContentLoaded", async () => {
   const menu = document.getElementById("menu");
   const container = document.getElementById("product-container");
-
-  // Vide le localStorage à chaque refresh
+let lastArticle
+let lastArticleKey 
+   //Vide le localStorage à chaque refresh
   window.addEventListener("load", () => {
     localStorage.clear();
   });
@@ -19,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Récupérer les catégories
     const categoriesResponse = await fetch("http://localhost:3000/typeProducts");
     const categories = await categoriesResponse.json();
-    console.log("Catégories récupérées :", categories);
+    //console.log("Catégories récupérées :", categories);
     
     categories.forEach(category => {
       // Ignorer la catégorie avec l'ID 47
@@ -48,18 +60,30 @@ document.addEventListener("DOMContentLoaded", async () => {
               prodButton.innerHTML = `
                 <img src="annexe/${product.image}" alt="${product.name}" class="image-product">
                 <br>
-                ${product.name}
+                <p id="productName">${product.name}</p>
                 <br>
-                ${product.price} €
+                <p id="PriceId">${product.price} € </p>
               `;
 
-              // Clic produit
+              // Clic Artcile
               prodButton.addEventListener("click", event => {
                 const productId = event.currentTarget.dataset.id;
-                const randomNum = Math.floor(Math.random() * 100) + 1;
-                const storageKey = "produit" + randomNum;
-                localStorage.setItem(storageKey, productId);
-                console.log(`Produit enregistré sous "${storageKey}": ${productId}`);
+                const priceRaw = document.getElementById("PriceId").innerHTML;
+                const priceId = priceRaw.replace("€", "").trim();
+                const productName = document.getElementById("productName").innerHTML;
+                console.log("Produit ID :", productId);
+                console.log("Produit Nom :", productName);
+                console.log("Produit Prix :", priceId);
+                let ArticleObject = [{"id":productId, "name" : productName, "price" : priceId}];
+                console.log("Produit Array :", ArticleObject);
+                // Enregistrement dans le localStorage
+                const randomNum = Math.floor(Math.random() * 50) + 1;
+                const ArticleKey = "Article" + randomNum;
+                localStorage.setItem(ArticleKey, JSON.stringify(ArticleObject));
+                console.log(`Produit enregistré sous "${ArticleKey}": ${ArticleObject}`);
+
+                 lastArticle = localStorage.getItem(ArticleKey);
+                 lastArticleKey = ArticleKey;
 
                 // === Gestion pop-up ===
                 if (product.type) {
@@ -95,16 +119,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       "http://localhost:3000/products/type/6",
       "http://localhost:3000/products/multi?ids=119,120"
     ];
-
+  
     const fetchAndShow = async () => {
       try {
         const apiToCall = endpoints[selectionCount];
         const response = await fetch(apiToCall);
         const selectableProducts = await response.json();
         const popup = document.getElementById("popup");
-
-        popup.innerHTML = `<button id="close-popup">Fermer</button><h3>Sélectionnez un produit (${selectionCount + 1}/5)</h3>`;
-
+  
+        popup.innerHTML = `<button id="close-popup"><img class="close-button" src="./annexe/images/supprimer.png"></button><h3>Sélectionnez un produit (${selectionCount + 1}/5)</h3>`;
+  
         selectableProducts.forEach(item => {
           const itemButton = document.createElement("button");
           itemButton.classList.add("popup-button");
@@ -116,22 +140,35 @@ document.addEventListener("DOMContentLoaded", async () => {
           `;
           popup.appendChild(itemButton);
         });
-
+  
         popup.classList.remove("hidden");
-
+  
         document.getElementById("close-popup").addEventListener("click", () => {
           popup.classList.add("hidden");
         });
-
+  
         const popupButtons = popup.querySelectorAll(".popup-button");
         popupButtons.forEach(popupBtn => {
           popupBtn.addEventListener("click", event => {
             const selectedId = event.currentTarget.dataset.id;
-            const rand = Math.floor(Math.random() * 100) + 1;
-            const key = "produit" + rand;
-            localStorage.setItem(key, selectedId);
-            console.log(`Produit sélectionné enregistré sous "${key}": ${selectedId}`);
-
+            const selectedName = event.currentTarget.innerText.split(" - ")[0].trim();
+          
+            const selectedProduct = {
+              id: selectedId,
+              name: selectedName,  
+            };
+            let existingArticle = localStorage.getItem(lastArticleKey);
+            let articleArray = [];
+  
+            if (existingArticle) {
+              articleArray = JSON.parse(existingArticle);
+            }
+            articleArray.push(selectedProduct);
+            localStorage.setItem(lastArticleKey, JSON.stringify(articleArray));
+  
+            console.log(`Produit sélectionné enregistré sous "${lastArticleKey}":`, articleArray);
+  
+        
             selectionCount++;
             popup.innerHTML = "";
             if (selectionCount < endpoints.length) {
@@ -145,9 +182,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Erreur dans openPopupMultiple :", error);
       }
     };
-
+  
     fetchAndShow();
   }
+  
 
   // === POPUP SIMPLE ===
   async function openPopupSingle(apiUrl, product) {
@@ -166,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const selectableProducts = await response.json();
 
       const popup = document.getElementById("popup");
-      popup.innerHTML = `<button id="close-popup">Fermer</button><h3>Sélectionnez un produit</h3>`;
+      popup.innerHTML = `<button id="close-popup"><img class="close-button" src="./annexe/images/supprimer.png"></button><h3>Sélectionnez un produit</h3>`;
       console.log("Produits sélectionnables :", selectableProducts);
 
       selectableProducts.forEach(item => {
@@ -184,18 +222,54 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       const popupButtons = popup.querySelectorAll(".popup-button");
-      popupButtons.forEach(popupBtn => {
-        popupBtn.addEventListener("click", event => {
-          const selectedId = event.currentTarget.dataset.id;
-          const rand = Math.floor(Math.random() * 100) + 1;
-          const key = "produit" + rand;
-          localStorage.setItem(key, selectedId);
-          console.log(`Produit sélectionné enregistré sous "${key}": ${selectedId}`);
-          popup.classList.add("hidden");
+        popupButtons.forEach(popupBtn => {
+          popupBtn.addEventListener("click", event => {
+            const selectedId = event.currentTarget.dataset.id;
+            const selectedName = event.currentTarget.innerText.split(" - ")[0].trim();
+          
+            const selectedProduct = {
+              id: selectedId,
+              name: selectedName,  
+            };
+            let existingArticle = localStorage.getItem(lastArticleKey);
+            let articleArray = [];
+  
+            if (existingArticle) {
+              articleArray = JSON.parse(existingArticle);
+            }
+            articleArray.push(selectedProduct);
+            localStorage.setItem(lastArticleKey, JSON.stringify(articleArray));
+  
+            console.log(`Produit sélectionné enregistré sous "${lastArticleKey}":`, articleArray);
+  
+        
+            selectionCount++;
+            popup.innerHTML = "";
+            if (selectionCount < endpoints.length) {
+              fetchAndShow();
+            } else {
+              popup.classList.add("hidden");
+            }
+          });
         });
-      });
-    } catch (error) {
-      console.error("Erreur dans openPopupSingle :", error);
-    }
-  }
-});
+      } catch (error) {
+        console.error("Erreur dans openPopupMultiple :", error);
+      }
+    };
+  
+    fetchAndShow();
+  })
+
+//=== Panier ===//
+
+
+const selection = localStorage.getItem('selection');
+const messageElement = document.getElementById('selection-type');
+
+if (selection === "2") {
+  messageElement.textContent = " Sur place 🍽️";
+} else if (selection === "1") {
+  messageElement.textContent =  "À emporter 🛍️";
+} else {
+  messageElement.textContent = "Aucune sélection détectée.";
+};

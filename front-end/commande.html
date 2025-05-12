@@ -13,7 +13,7 @@
    <div>
     <div id="menu-wrapper">
       <button id="left-arrow" class="arrow"><img src="./annexe/images/fleche-slider.png"></button>
-      <!-- Ce conteneur permet le défilement horizontal des boutons -->
+      <!--   permet le défilement horizontal  -->
       <div id="menu" class="menu-scroll">
         <!-- Les boutons de catégorie générés dynamiquement apparaîtront ici -->
       </div>
@@ -28,12 +28,16 @@
 <!--recapitulatif de commande-->
   <div id="order-summary">
     <h2>Votre commande</h2>
-    <p>Commande n°: <span id="order-number"></span></p>
-    <p>Sur place: <span id="order-in-store"></span></p>
+    <p id="selection-type"></p>
+    <p>${localstorage.id_option} <span id="order-in-store"></span></p>
+    ${<div id="order-details1">
+      <h3>${product-button}</h3>
     <ul id="order-items">
-      <!-- Les articles ajoutés seront listés ici -->
+    <!--faire des li en java-->
     </ul>
-    <p>Total: <span id="order-total"> €</span></p>
+
+  </div>}
+    <p>Total: ${localstorage.Article.price} <span id="order-total"> €</span></p>
     <div id="order-actions">
       <button id="cancel-order">Abandon</button>
       <button id="pay-order">Payer</button>
@@ -44,3 +48,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
