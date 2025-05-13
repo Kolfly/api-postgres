@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <br>
                 <p id="PriceId">${product.price} € </p>
               `;
-
+              console.log(prodButton)
               // Clic Article
               prodButton.addEventListener("click", event => {
                 const productId = event.currentTarget.dataset.id;
@@ -90,13 +90,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (product.type) {
                   if (product.type.toString() === "1") {
                     openPopupMultiple(product);
-                  } else {
+                  } else if (product.id.toString() === "2" || product.id.toString() === "3") {
                     openPopupSingle("http://localhost:3000/products", product);
-                  }
-                }
+                  }}
+                   else  {calculerTotalPrixArticles();}
 
-                // ✅ Toujours recalculer le total prix après clic
-                calculerTotalPrixArticles();
+                
               });
 
               container.appendChild(prodButton);
