@@ -1,4 +1,4 @@
-// page selection.html ===//
+/* page selection.html ===*/
 function choisiroption(selection) {
   // Enregistre la sélection dans le localStorage
   localStorage.setItem('selection', selection);
@@ -7,7 +7,7 @@ function choisiroption(selection) {
   window.location.href = 'commande.html';
 }
 
-//=== page commande.html ===//
+/*=== page commande.html === */
 
 document.addEventListener("DOMContentLoaded", async () => {
   const menu = document.getElementById("menu");
@@ -15,12 +15,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let lastArticle;
   let lastArticleKey;
 
-  // Vide le localStorage à chaque refresh
-  window.addEventListener("load", () => {
-    localStorage.clear();
-  });
+ 
 
-  // Défilement du menu
+  // === DEFILEMENT DU MENU === //
   document.getElementById("left-arrow").addEventListener("click", () => {
     menu.scrollLeft -= 100;
   });
@@ -28,6 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     menu.scrollLeft += 100;
   });
 
+
+// === RECUPERATION DES CATEGORIES === //
   try {
     // Récupérer les catégories
     const categoriesResponse = await fetch("http://localhost:3000/typeProducts");
@@ -45,7 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         catButton.classList.add("menu-button");
         catButton.dataset.category = category.id;
 
-        // Ajoute l'événement sur le bouton de catégorie
+
+        // === CREATION DES BOUTONS === //
         catButton.addEventListener("click", async () => {
           try {
             const productsResponse = await fetch(`http://localhost:3000/products/type/${category.id}`);
@@ -60,17 +60,18 @@ document.addEventListener("DOMContentLoaded", async () => {
               prodButton.innerHTML = `
                 <img src="annexe/${product.image}" alt="${product.name}" class="image-product">
                 <br>
-                <p id="productName">${product.name}</p>
+                <p id="productName${product.id}">${product.name}</p>
                 <br>
-                <p id="PriceId">${product.price} € </p>
+                <p id="PriceId${product.id}">${product.price} € </p>
               `;
               console.log(prodButton)
               // Clic Article
               prodButton.addEventListener("click", event => {
+                console.log(event.currentTarget.dataset)
                 const productId = event.currentTarget.dataset.id;
-                const priceRaw = document.getElementById("PriceId").innerHTML;
+                const priceRaw = document.getElementById("PriceId"+productId).innerHTML;
                 const priceId = priceRaw.replace("€", "").trim();
-                const productName = document.getElementById("productName").innerHTML;
+                const productName = document.getElementById("productName"+productId).innerHTML;
                 console.log("Produit ID :", productId);
                 console.log("Produit Nom :", productName);
                 console.log("Produit Prix :", priceId);
@@ -82,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const ArticleKey = "Article" + randomNum;
                 localStorage.setItem(ArticleKey, JSON.stringify(ArticleObject));
                 console.log(`Produit enregistré sous "${ArticleKey}": ${ArticleObject}`);
-
+                afficherPanier();
                 lastArticle = localStorage.getItem(ArticleKey);
                 lastArticleKey = ArticleKey;
 
@@ -90,10 +91,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (product.type) {
                   if (product.type.toString() === "1") {
                     openPopupMultiple(product);
-                  } else if (product.id.toString() === "2" || product.id.toString() === "3") {
+                  } else if ([37, 38, 39, 40, 41, 29, 30, 31, 32, 33, 34, 35, 36, 44, 45].includes(parseInt(product.id))) {
                     openPopupSingle("http://localhost:3000/products", product);
-                  }}
-                   else  {calculerTotalPrixArticles();}
+                  } else {
+                    calculerTotalPrixArticles(); // ✅ ICI il manquait
+                  }
+                } else {
+                  calculerTotalPrixArticles();
+                }
 
                 
               });
@@ -112,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Erreur lors de la récupération des catégories :", error);
   }
 
-  // === POPUP MULTIPLE ===
+  // === POPUP MULTIPLE === //
   function openPopupMultiple(product) {
     let selectionCount = 0;
     const endpoints = [
@@ -170,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem(lastArticleKey, JSON.stringify(articleArray));
 
             console.log(`Produit sélectionné enregistré sous "${lastArticleKey}":`, articleArray);
-
+            afficherPanier();
             selectionCount++;
             popup.innerHTML = "";
             if (selectionCount < endpoints.length) {
@@ -191,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchAndShow();
   }
 
-  // === POPUP SIMPLE ===
+  // === POPUP SIMPLE === //
   async function openPopupSingle(apiUrl, product) {
     try {
       let finalApiUrl = "";
@@ -245,7 +250,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           localStorage.setItem(lastArticleKey, JSON.stringify(articleArray));
 
           console.log(`Produit sélectionné enregistré sous "${lastArticleKey}":`, articleArray);
-
+          afficherPanier();
           popup.classList.add("hidden");
           const totalPrix = calculerTotalPrixArticles();
           document.getElementById("order-total").textContent = totalPrix.toFixed(2) + " €";
@@ -259,6 +264,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   //=== Panier ===//
 
+  //ajout selection sur place ou a emporter
   const selection = localStorage.getItem('selection');
   const messageElement = document.getElementById('selection-type');
 
@@ -270,6 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     messageElement.textContent = "Aucune sélection détectée.";
   }
 
+  //calcul prix total 
   function calculerTotalPrixArticles() {
     let total = 0;
 
@@ -300,5 +307,57 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   calculerTotalPrixArticles();
-
+  afficherPanier();
 });
+
+//affichage des article du panier 
+
+function afficherPanier() {
+  const panierList = document.getElementById("panier-list");
+  panierList.innerHTML = ""; // Nettoie le panier
+
+  // Parcours toutes les clés 
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+
+    if (key.startsWith("Article")) {
+      const articleData = JSON.parse(localStorage.getItem(key));
+
+      if (Array.isArray(articleData) && articleData.length > 0) {
+        const ul = document.createElement("ul");
+        ul.classList.add("article-block");
+
+        // Affiche le produit principal dans un h2 
+        const liTitle = document.createElement("li");
+        liTitle.innerHTML = `<h2>${articleData[0].name}</h2>`;
+        ul.appendChild(liTitle);
+
+        // Affiche les composants 
+        for (let j = 1; j < articleData.length; j++) {
+          const li = document.createElement("li");
+          li.textContent = articleData[j].name;
+          ul.appendChild(li);
+        }
+
+        // Ajoute ce bloc au panier général
+        panierList.appendChild(ul);
+      }
+    }
+  }
+}
+// renvoi vers la fin ou le chevalet suivant la selection
+function redirigerVersChevalet() {
+  const selection = localStorage.getItem('selection');
+  if (selection === "2") {
+    window.location.href = 'chevalet.html';
+  } else {
+    window.location.href = 'fin.html';
+  }
+};
+ // Vide le localStorage à chaque refresh
+function abandon() {
+  localStorage.clear();
+  window.location.href = 'selection.html';
+};
+
+// === PAGE CHEVALET ===//

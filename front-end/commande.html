@@ -27,23 +27,25 @@
   </div>
 <!--recapitulatif de commande-->
   <div id="order-summary">
+
     <h2>Votre commande</h2>
     <p id="selection-type"></p>
-    <p>${localstorage.id_option} <span id="order-in-store"></span></p>
-    ${<div id="order-details1">
-      <h3>${product-button}</h3>
-    <ul id="order-items">
-    <!--faire des li en java-->
-    </ul>
-
-  </div>}
-    <p>Total: <span id="order-total"> </span></p>
-    <div id="order-actions">
-      <button id="cancel-order">Abandon</button>
-      <button id="pay-order">Payer</button>
+    
+    <div id="order-items">
+       <ul id="panier-list"></ul>
     </div>
+     
+  
+    <p>Total: <span id="order-total"> </span></p>
+
+    <div id="order-actions">
+      <button id="cancel-order" onclick="abandon()">Abandon</button>
+      <button id="pay-order" onclick="redirigerVersChevalet()">Payer</button>
+    </div>
+
   </div>
-</div>
+
+
 <div id="popup" class="hidden"></div>
   <script src="script.js"></script>
 </body>
