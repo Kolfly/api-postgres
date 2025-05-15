@@ -1,4 +1,63 @@
-/* page selection.html ===*/
+/* === page login.html === */
+function login() {
+  const mail = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const client = { mail, password };
+  console.log(client);
+
+  fetch("http://localhost:3000/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(client)
+    
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Erreur de connexion");
+    }
+    return response.json();
+  })
+  .then(data => {
+    //  Stocker name et lastName
+    const { name, last_name, token } = data;
+    localStorage.setItem("client",name + " " + last_name);
+    console.log("Nom et prénom stockés dans le localStorage :", name, last_name);
+    console.log("Token reçu :", token);
+
+    //  Stocker le token
+    localStorage.setItem("token", token);
+
+    //  Décoder le token 
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const role = payload.role;
+
+    // 4. Redirection selon le rôle
+    switch (role) {
+      case 4:
+        window.location.href = "selection.html";
+        break;
+      case 1:
+        window.location.href = "manager.html";
+        break;
+      case 3:
+        window.location.href = "preparateur.html";
+        break;
+      case 2:
+        window.location.href = "Accueil.html";
+        break;
+      default:
+        alert("Rôle inconnu");
+    }
+  })
+  .catch(error => {
+    alert(error.message);
+  });
+}
+
+
+/* ===page selection.html ===*/
 function choisiroption(selection) {
   // Enregistre la sélection dans le localStorage
   localStorage.setItem('selection', selection);
@@ -10,6 +69,7 @@ function choisiroption(selection) {
 /*=== page commande.html === */
 
 document.addEventListener("DOMContentLoaded", async () => {
+  if(window.location.pathname.includes("commande.html")){
   const menu = document.getElementById("menu");
   const container = document.getElementById("product-container");
   let lastArticle;
@@ -308,7 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   calculerTotalPrixArticles();
   afficherPanier();
-});
+}});
 
 //affichage des article du panier 
 
@@ -353,11 +413,102 @@ function redirigerVersChevalet() {
   } else {
     window.location.href = 'fin.html';
   }
+  savetotal();
+  console.log("total enregistrer :", localStorage.getItem('total'));
 };
  // Vide le localStorage à chaque refresh
 function abandon() {
   localStorage.clear();
-  window.location.href = 'selection.html';
+  window.location.href = 'login.html';
 };
 
+function savetotal() {
+  const total = document.getElementById("order-total").textContent;
+  localStorage.setItem('total', total);
+  console.log("Total enregistré :", total);
+}
+
+
 // === PAGE CHEVALET ===//
+//ecriture du code chevalet
+function moveToNext(current, nextId) {
+
+  current.value = current.value.replace(/[^0-9]/g, '');
+
+  if (current.value.length === 1 && nextId) {
+    document.getElementById(nextId).focus();
+  }};
+
+// Fonction pour récupérer et calculer le code
+function getCode() {
+  const d1 = document.getElementById('n1').value;
+  const d2 = document.getElementById('n2').value;
+  const d3 = document.getElementById('n3').value;
+
+  // Concaténation et conversion en nombre entier
+  const code = parseInt(d1 + d2 + d3, 10);
+  console.log("Code du chevalet :", code);
+
+  return code;
+}
+
+// Fonction pour enregistrer et rediriger
+function addchevalet() {
+  const code = getCode(); // on récupère le code ici
+  localStorage.setItem('chevalet', code);
+  window.location.href = 'fin.html';
+}
+
+let commande;
+
+function envoiCommande() {
+  commande = {
+    selection: parseInt(localStorage.getItem('selection')),
+    chevalet: parseInt(localStorage.getItem('chevalet')),
+    total: parseFloat(localStorage.getItem('total')),
+    client: localStorage.getItem('client'),
+    articles: []
+  };
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith("Article")) {
+      const articleData = JSON.parse(localStorage.getItem(key));
+
+      for (let j = 0; j < articleData.length; j++) {
+        const article = {
+          id: parseInt(articleData[j].id),
+        };
+        commande.articles.push(article);
+      }
+    }
+  }
+
+  // ✅ Envoi de la commande UNE SEULE FOIS ici, hors des boucles
+  console.log("Commande finale à envoyer :", commande);
+
+  fetch("http://localhost:3000/commands", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(commande)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log("Réponse du serveur :", data);
+  })
+  .catch(error => {
+    console.error("Erreur lors de l'envoi de la commande :", error);
+  });
+}
+
+// Envoi automatique à l'ouverture de la page fin.html
+document.addEventListener("DOMContentLoaded", function () {
+  if (window.location.pathname.includes("fin.html")) {
+    envoiCommande();
+  }
+});
+
+
+  

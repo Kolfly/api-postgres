@@ -16,10 +16,11 @@
         <h2>Pour etre servis a table,</h2>
         <p>Recuperez un chevalet et indiquez ici le numero inscrit dessus</p>
         <div class="code-inputs">
-            <input type="number" maxlength="1" class="code-chevalet" />
-            <input type="number" maxlength="1" class="code-chevalet" />
-            <input type="number" maxlength="1" class="code-chevalet" />
+            <input type="text" maxlength="1" class="code-chevalet" id="n1" oninput="moveToNext(this, 'n2')" />
+            <input type="text" maxlength="1" class="code-chevalet" id="n2" oninput="moveToNext(this, 'n3')" />
+            <input type="text" maxlength="1" class="code-chevalet" id="n3" oninput="moveToNext(this, null)" />
           </div>
+          
     </div>
-    <button>Ajouter le chevalet</button>
+    <button onclick="addchevalet()">Ajouter le chevalet</button>
 </body>

@@ -84,6 +84,8 @@ const loginUser = async (req, res) => {
     const payload = {
       userId: user.id,
       role: user.role,
+      name: user.name,
+      last_name: user.last_name,
     };
 
     //  le secret est bien défini
@@ -98,6 +100,8 @@ const loginUser = async (req, res) => {
       message: 'Connexion réussie',
       token: `Bearer ${token}`,
       role: user.role,
+      name: user.name,
+      last_name: user.last_name,
     });
   } catch (error) {
     console.error('Erreur lors de la connexion :', error);
