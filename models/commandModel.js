@@ -4,7 +4,7 @@ const pool = require('../db');
 const getAllCommands = async () => {
   const query = `
     SELECT c.id_command, c.nom_client, c.price, c.statut,
-           cd.code_produit, cd.quantite, cd.prix_unitaire, cd.sous_total
+           cd.code_produit
     FROM Command_tete c
     JOIN Command_detail cd ON c.id_command = cd.id_command;
   `;

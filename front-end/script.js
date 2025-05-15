@@ -5,7 +5,7 @@ function login() {
   const client = { mail, password };
   console.log(client);
 
-  fetch("http://localhost:3000/users/login", {
+  fetch("https://185.124.200.163/users/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // === RECUPERATION DES CATEGORIES === //
   try {
     // Récupérer les catégories
-    const categoriesResponse = await fetch("http://localhost:3000/typeProducts");
+    const categoriesResponse = await fetch("https://185.124.200.163/typeProducts");
     const categories = await categoriesResponse.json();
 
     categories.forEach(category => {
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // === CREATION DES BOUTONS === //
         catButton.addEventListener("click", async () => {
           try {
-            const productsResponse = await fetch(`http://localhost:3000/products/type/${category.id}`);
+            const productsResponse = await fetch(`https://185.124.200.163/products/type/${category.id}`);
             const products = await productsResponse.json();
 
             container.innerHTML = "";
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   if (product.type.toString() === "1") {
                     openPopupMultiple(product);
                   } else if ([37, 38, 39, 40, 41, 29, 30, 31, 32, 33, 34, 35, 36, 44, 45].includes(parseInt(product.id))) {
-                    openPopupSingle("http://localhost:3000/products", product);
+                    openPopupSingle("https://185.124.200.163/products", product);
                   } else {
                     calculerTotalPrixArticles(); // ✅ ICI il manquait
                   }
@@ -181,11 +181,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   function openPopupMultiple(product) {
     let selectionCount = 0;
     const endpoints = [
-      "http://localhost:3000/products/multi?ids=117,118",
-      "http://localhost:3000/products/multi?ids=39,40",
-      "http://localhost:3000/products/multi?ids=58,61",
-      "http://localhost:3000/products/type/6",
-      "http://localhost:3000/products/multi?ids=119,120"
+      "https://185.124.200.163/products/multi?ids=117,118",
+      "https://185.124.200.163/products/multi?ids=39,40",
+      "https://185.124.200.163/products/multi?ids=58,61",
+      "https://185.124.200.163/products/type/6",
+      "https://185.124.200.163/products/multi?ids=119,120"
     ];
 
     const fetchAndShow = async () => {
@@ -262,11 +262,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       let finalApiUrl = "";
       console.log("Produit ID :", product.id);
       if ([37, 38, 39, 40, 41].includes(product.id)) {
-        finalApiUrl = "http://localhost:3000/products/multi?ids=58,61";
+        finalApiUrl = "https://185.124.200.163/products/multi?ids=58,61";
       } else if ([29, 30, 31, 32, 33, 34, 35, 36].includes(product.id)) {
-        finalApiUrl = "http://localhost:3000/products/multi?ids=119,120";
+        finalApiUrl = "https://185.124.200.163/products/multi?ids=119,120";
       } else if ([44, 45].includes(product.id)) {
-        finalApiUrl = "http://localhost:3000/products/type/9";
+        finalApiUrl = "https://185.124.200.163/products/type/9";
       }
 
       const response = await fetch(finalApiUrl);
@@ -419,7 +419,7 @@ function redirigerVersChevalet() {
  // Vide le localStorage à chaque refresh
 function abandon() {
   localStorage.clear();
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 };
 
 function savetotal() {
@@ -487,7 +487,7 @@ function envoiCommande() {
   // ✅ Envoi de la commande UNE SEULE FOIS ici, hors des boucles
   console.log("Commande finale à envoyer :", commande);
 
-  fetch("http://localhost:3000/commands", {
+  fetch("https://185.124.200.163/commands", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
