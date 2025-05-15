@@ -33,7 +33,8 @@ app.use('/users', userRoutes);
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 3000; // Récupère PORT depuis .env ou utilise 3000 par défaut
-app.listen(PORT, () => {
+const HOST = '0.0.0.0';  // écoute toutes les interfaces
+app.listen(PORT,HOST, () => {
   console.log(` Serveur démarré sur http://localhost:${PORT}`);
   console.log(' Documentation Swagger disponible sur http://localhost:3000/api-docs');
 });
