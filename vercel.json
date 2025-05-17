@@ -3,6 +3,6 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/monAPI"
+            "destination": "/api"
 }]
 }
