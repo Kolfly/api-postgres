@@ -32,7 +32,7 @@ app.use('/commands', commandRoutes);
 app.use('/users', userRoutes);
 
 // Démarrer le serveur
-const PORT = process.env.PORT || 3000; // Récupère PORT depuis .env ou utilise 3000 par défaut
+ const PORT = process.env.PORT || 3000; // Récupère PORT depuis .env ou utilise 3000 par défaut
 const HOST = '0.0.0.0';  // écoute toutes les interfaces
 app.listen(PORT,HOST, () => {
   console.log(` Serveur démarré sur http://localhost:${PORT}`);

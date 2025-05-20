@@ -1,0 +1,4 @@
+ Serveur démarré sur http://localhost:\\.\pipe\c368cbce-510f-437e-a287-f3558ccf1906
+ Documentation Swagger disponible sur http://localhost:3000/api-docs
+getAllCommands appelée
+Nombre de commandes récupérées: 79

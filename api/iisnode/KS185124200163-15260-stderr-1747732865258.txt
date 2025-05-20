@@ -1,0 +1,12 @@
+Application has thrown an uncaught exception and is terminated:
+Error: ENOENT: no such file or directory, open 'C:\inetpub\wwwroot\monAPI\api\swagger.yaml'
+    at Object.openSync (node:fs:562:18)
+    at Object.readFileSync (node:fs:446:35)
+    at Utils.getStringFromFile (C:\inetpub\wwwroot\monAPI\node_modules\yamljs\lib\Utils.js:284:19)
+    at Yaml.parseFile (C:\inetpub\wwwroot\monAPI\node_modules\yamljs\lib\Yaml.js:46:21)
+    at Yaml.load (C:\inetpub\wwwroot\monAPI\node_modules\yamljs\lib\Yaml.js:78:17)
+    at Object.<anonymous> (C:\inetpub\wwwroot\monAPI\api\config\swaggerConfig.js:3:30)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14)
+    at Object..js (node:internal/modules/cjs/loader:1706:10)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
