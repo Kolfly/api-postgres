@@ -4,7 +4,7 @@ info:
   description: API pour la prise de commande pour Wacdo
   version: "1.0.0"
 servers:
-  - url: http://localhost:3000
+  - url: https://wacdoapi.online
     description: Serveur de développement
 tags:
   - name: types

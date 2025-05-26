@@ -1,2 +1,0 @@
- Serveur démarré sur http://localhost:\\.\pipe\3701c82a-ab70-4389-ac6d-9b9977987eec
- Documentation Swagger disponible sur http://localhost:3000/api-docs
