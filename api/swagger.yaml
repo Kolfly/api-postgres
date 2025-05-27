@@ -56,7 +56,7 @@ paths:
   /type/{id}:
     delete:
       tags: [types]
-      summary: Supprimé un utilisateur par ID
+      summary: Supprimé un types par ID
       parameters:
         - $ref: "#/components/parameters/id"
       responses:

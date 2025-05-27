@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const swaggerSetup = require('./config/swaggerConfig.js'); 
+const swaggerSetup = require('./swaggerConfig.js'); 
 const app = express();
 
 // Middleware CORS

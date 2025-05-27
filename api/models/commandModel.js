@@ -3,10 +3,18 @@ const pool = require('../db');
 // Récupérer toutes les commandes avec leurs détails
 const getAllCommands = async () => {
   const query = `
-    SELECT c.id_command, c.nom_client, c.price, c.statut,
-           cd.code_produit
-    FROM Command_tete c
-    JOIN Command_detail cd ON c.id_command = cd.id_command;
+    SELECT 
+  c.id_command, 
+  c.nom_client, 
+  c.price, 
+  c.statut,
+  c.chevalet,
+  c.selection,
+  array_agg(cd.code_produit) AS produits
+FROM command_tete c
+LEFT JOIN command_detail cd ON c.id_command = cd.id_command
+GROUP BY 
+  c.id_command, c.nom_client, c.price, c.statut, c.chevalet, c.selection;
   `;
   const result = await pool.query(query);
   return result.rows;
@@ -15,11 +23,19 @@ const getAllCommands = async () => {
 // Récupérer une commande avec ses détails par ID
 const getCommandById = async (id) => {
   const query = `
-    SELECT c.id_command, c.nom_client, c.price, c.statut,
-           cd.code_produit, cd.quantite, cd.prix_unitaire, cd.sous_total
-    FROM Command_tete c
-    JOIN Command_detail cd ON c.id_command = cd.id_command
-    WHERE c.id_command = $1;
+    SELECT 
+  c.id_command, 
+  c.nom_client, 
+  c.price, 
+  c.statut,
+  c.chevalet,
+  c.selection,
+  array_agg(cd.code_produit) AS produits
+FROM command_tete c
+LEFT JOIN command_detail cd ON c.id_command = cd.id_command
+WHERE c.id_command = $1
+GROUP BY 
+  c.id_command, c.nom_client, c.price, c.statut, chevalet, selection;
   `;
   const result = await pool.query(query, [id]);
   return result.rows;
